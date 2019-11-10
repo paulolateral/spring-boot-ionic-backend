@@ -41,8 +41,9 @@ public class ClienteService {
 	@Transactional
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
+		repo.save(obj);
 		enderecoRepositoy.saveAll(obj.getEnderecos());
-		return repo.save(obj);
+		return obj;
 	}
 	
 	public Cliente update(Cliente obj) {
