@@ -23,6 +23,7 @@ public class AuthResource {
 	@Autowired
 	private JWTUtil jwtUtil;
 	
+	@Autowired
 	private AuthService authService;
 	
 	@RequestMapping(value = "/refresh_token", method = RequestMethod.POST)
