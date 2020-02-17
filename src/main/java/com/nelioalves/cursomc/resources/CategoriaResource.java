@@ -18,71 +18,70 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.nelioalves.cursomc.domain.Cliente;
-import com.nelioalves.cursomc.dto.ClienteDTO;
-import com.nelioalves.cursomc.dto.ClienteNewDTO;
-import com.nelioalves.cursomc.services.ClienteService;
+import com.nelioalves.cursomc.domain.Categoria;
+import com.nelioalves.cursomc.dto.CategoriaDTO;
+import com.nelioalves.cursomc.services.CategoriaService;
 
 @RestController
-@RequestMapping(value = "clientes")
-public class ClienteResouce {
+@RequestMapping(value = "categorias")
+public class CategoriaResource {
 
 	@Autowired
-	private ClienteService service;
+	private CategoriaService service;
 	
 	@RequestMapping(value="/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Cliente> listar(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> listar(@PathVariable Integer id) {
 		
-		Cliente cli = service.find(id);
-		return ResponseEntity.ok().body(cli);
+		Categoria cat = service.find(id);
+		return ResponseEntity.ok().body(cat);
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) {
-		Cliente obj = service.fromDTO(objDto);
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
+		Categoria obj = service.fromDTO(objDto);
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value = "{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDTO objDto, @PathVariable Integer id) {
-		Cliente obj = service.fromDTO(objDto);
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id) {
+		Categoria obj = service.fromDTO(objDto);
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
-	
-	@PreAuthorize("hasAnyRole('ADMIN')")
+
+	 @PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<ClienteDTO>> findAll() {
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
 		
-		List<Cliente> list = service.findAll();
+		List<Categoria> list = service.findAll();
 		
-		List<ClienteDTO> listDto = list.stream().map(obj -> new ClienteDTO(obj)).collect(Collectors.toList());
+		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
 		
 		return ResponseEntity.ok().body(listDto);
 	}
 	
-	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value = "page" ,method = RequestMethod.GET)
-	public ResponseEntity<Page<ClienteDTO>> findPage(
+	public ResponseEntity<Page<CategoriaDTO>> findPage(
 			@RequestParam(value = "page", defaultValue = "0") Integer page, 
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage, 
 			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy, 
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
 		
-		Page<Cliente> list = service.findPage(page, linesPerPage, orderBy, direction);
+		Page<Categoria> list = service.findPage(page, linesPerPage, orderBy, direction);
 		
-		Page<ClienteDTO> listDto = list.map(obj -> new ClienteDTO(obj));
+		Page<CategoriaDTO> listDto = list.map(obj -> new CategoriaDTO(obj));
 		
 		return ResponseEntity.ok().body(listDto);
 	}

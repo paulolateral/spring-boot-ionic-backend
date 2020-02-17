@@ -18,7 +18,7 @@ import com.nelioalves.cursomc.services.ProdutoService;
 
 @RestController
 @RequestMapping(value = "produtos")
-public class ProdutoResouce {
+public class ProdutoResource {
 
 	@Autowired
 	private ProdutoService service;
