@@ -136,4 +136,18 @@ public class ClienteService {
 		return url;
 		
 	}
+	
+	public Cliente findByEmail(String email) {
+		
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasHole(Perfil.ADMIN) || !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
+		Cliente obj = repo.findByEmail(user.getUsername());
+		if (obj == null) {
+			throw new ObjectNotFoundException("Obmjeto não encontrado! Id: " + user.getId() + ", Tipo: " + Cliente.class.getName());
+		}
+		return obj;
+	}
 }

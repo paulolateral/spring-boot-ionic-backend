@@ -25,7 +25,7 @@ import com.nelioalves.cursomc.dto.ClienteNewDTO;
 import com.nelioalves.cursomc.services.ClienteService;
 
 @RestController
-@RequestMapping(value = "clientes")
+@RequestMapping(value = "/clientes")
 public class ClienteResource {
 
 	@Autowired
@@ -37,6 +37,12 @@ public class ClienteResource {
 		Cliente cli = service.find(id);
 		return ResponseEntity.ok().body(cli);
 	}
+	
+	@RequestMapping(value="/email", method = RequestMethod.GET)
+	public ResponseEntity<Cliente> find(@RequestParam(value = "email") String email) {
+		Cliente cli = service.findByEmail(email);
+		return ResponseEntity.ok().body(cli);
+	}	
 	
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto) {
